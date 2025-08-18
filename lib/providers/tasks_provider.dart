@@ -5,7 +5,10 @@ import 'package:todolist_provider/models/taks_models.dart';
 class TasksProvider with ChangeNotifier{
   final List<TaksModels> _tasks= [];
 
+
+
   List<TaksModels> get tasks => _tasks;
+ 
   
   void addTask(String category, String title){
     final newTask = TaksModels(id: DateTime.now().toString(), category: category, title: title);
@@ -15,7 +18,7 @@ class TasksProvider with ChangeNotifier{
 
   }
 
-  void toggleTaskStatus(String id){
+  void toggleTaskStatus(bool id){
     final taskIndex = tasks.indexWhere((task) => task == task.id);
     if(taskIndex != -1){
       _tasks[taskIndex].isCompleted = !_tasks[taskIndex].isCompleted;

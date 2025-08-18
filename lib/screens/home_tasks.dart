@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todolist_provider/models/taks_models.dart';
 import 'package:todolist_provider/providers/tasks_provider.dart';
 import 'package:todolist_provider/screens/add_task.dart';
 
@@ -16,16 +15,10 @@ class _HomeTasksState extends State<HomeTasks> {
   Widget build(BuildContext context) {
     final _taskProvider = Provider.of<TasksProvider>(context);
   
-    List<bool> isValue = [];
-    bool isSelected = false;
     void capturarTarea() async {
       final nuevaTarea = await Navigator.push(context, MaterialPageRoute(builder: (context) => AddTask()));
       if(nuevaTarea != null){
         _taskProvider.addTask("categoria", nuevaTarea);
-        setState(() {
-          isValue.add(false);
-
-        });
       }
     }
     return Scaffold(
@@ -38,14 +31,20 @@ class _HomeTasksState extends State<HomeTasks> {
        itemBuilder: (context, index) {
         return _taskProvider.tasks.isEmpty ? SizedBox() : ListTile(
           title: Text(_taskProvider.tasks[index].title, style: TextStyle(
-            decoration: isValue[index] ? TextDecoration.lineThrough : TextDecoration.none,
+            decoration: _taskProvider.tasks[index].isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
             fontSize: 22,
           )),
-          leading: Checkbox(value: isValue[index], onChanged: (value) {
-            setState(() {
-              isValue[index] = value!;
-            });
-          },),
+          leading: Checkbox(
+            tristate: false,
+            value: _taskProvider.tasks[index].isCompleted, 
+            onChanged: (bool? value) {
+              setState(() {
+              _taskProvider.tasks[index].isCompleted = value!;
+              });
+          }),
+          onTap: () async {
+           
+          },
         ); 
        
        }
