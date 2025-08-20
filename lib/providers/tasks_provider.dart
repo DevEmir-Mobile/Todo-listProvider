@@ -1,27 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:todolist_provider/models/taks_models.dart';
-//Ahi que modificar este provider. Hay fallas en la implementancion de la logica que queremos llegar.
 class TasksProvider with ChangeNotifier{
   final List<TaksModels> _tasks= [];
 
 
 
   List<TaksModels> get tasks => _tasks;
- 
-  
-  void addTask(String category, String title){
-    final newTask = TaksModels(id: DateTime.now().toString(), category: category, title: title);
-    _tasks.add(newTask);
-    notifyListeners();
-    print("Total tareas: ${_tasks.length}"); // Y esto también
-
+   List<TaksModels> get completedTask {
+    return _tasks.where((task) => task.isCompleted).toList();
+  }
+   List<TaksModels> get incompleteTask {
+    return _tasks.where((task) => !task.isCompleted).toList();
   }
 
-  void toggleTaskStatus(bool id){
-    final taskIndex = tasks.indexWhere((task) => task == task.id);
+  int _selectedTabindex = 0;
+ 
+  int get selectedTabindex => _selectedTabindex;
+
+  void setSelectedIndex(int index){
+    _selectedTabindex = index;
+    notifyListeners();
+  }
+
+  List<TaksModels> get filteredTasks {
+    switch (_selectedTabindex) {
+      case 1:
+        return completedTask;
+      case 2:
+        return incompleteTask;
+      default:
+        return tasks;
+    }
+  }
+
+ 
+
+
+  
+  void addTask (String title){
+    final newTask = TaksModels(id: DateTime.now().toString(), title: title);
+    _tasks.add(newTask);
+    notifyListeners();
+  }
+  void deleteTask(int index){
+    _tasks.removeAt(index);
+    notifyListeners();
+  }
+  void updateTask(String id, String newTitle){
+    final taskIndex = tasks.indexWhere((task) => task.id == id);
     if(taskIndex != -1){
-      _tasks[taskIndex].isCompleted = !_tasks[taskIndex].isCompleted;
+      _tasks[taskIndex].title = newTitle;
       notifyListeners();
 
     }

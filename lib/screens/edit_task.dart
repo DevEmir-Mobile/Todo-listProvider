@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class EditTask extends StatefulWidget {
   final String? currentTitle;
-  const EditTask({super.key, this.currentTitle});
+  final String? taskId;
+  const EditTask({super.key, this.currentTitle, this.taskId});
 
   @override
   State<EditTask> createState() => _EditTaskState();
